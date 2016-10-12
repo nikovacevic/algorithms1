@@ -1,7 +1,5 @@
 package mergesort
 
-import "fmt"
-
 // Sort sorts a slice of integers in ascending order, returning the result
 func Sort(arr []int) []int {
 	// Base case: an array of length 1 is always sorted
@@ -15,7 +13,6 @@ func Sort(arr []int) []int {
 // merge is a utility function used by Sort to merge two arrays while
 // maintaining ascenting order
 func merge(arr1 []int, arr2 []int) []int {
-	fmt.Printf("Merge %v with %v => ", arr1, arr2)
 	// Merged array
 	var arr []int
 	// Use two indices to track progress through each array
@@ -35,6 +32,5 @@ func merge(arr1 []int, arr2 []int) []int {
 			i2++
 		}
 	}
-	fmt.Printf("%v\n", arr)
 	return arr
 }
