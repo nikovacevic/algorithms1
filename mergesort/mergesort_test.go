@@ -6,6 +6,7 @@ var SortTests = []struct {
 	arr      []int
 	expected []int
 }{
+	{[]int{}, []int{}},
 	{[]int{1}, []int{1}},
 	{[]int{1, 2, 3}, []int{1, 2, 3}},
 	{[]int{3, 2, 1}, []int{1, 2, 3}},

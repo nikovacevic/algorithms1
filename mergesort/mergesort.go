@@ -5,7 +5,7 @@ import "fmt"
 // Sort sorts a slice of integers in ascending order, returning the result
 func Sort(arr []int) []int {
 	// Base case: an array of length 1 is always sorted
-	if len(arr) == 1 {
+	if len(arr) <= 1 {
 		return arr
 	}
 	// Merge the recursively sorted halves of the array
