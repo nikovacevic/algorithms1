@@ -1,62 +1,42 @@
 package multiplication
 
 import (
-	"fmt"
+	"math"
 	"strconv"
 )
 
-// Karatsuba returns the product of a and b
-// TODO more
-func Karatsuba(a string, b string) (string, error) {
+// Karatsuba returns the product of a and b, which should be positive integers
+// represented as strings (e.g. 123 as "123").
+func Karatsuba(a string, b string) string {
 	// Make sure string lengths are equal
 	evenPad(&a, &b)
 	// Make sure string lengths are powers of 2
-	// TODO
-	r, err := karatsuba(a, b)
-	if err != nil {
-		return "", err
-	}
-	return r, nil
+	a = padToPowerOfTwo(a)
+	b = padToPowerOfTwo(b)
+	return unpad(karatsuba(a, b))
 }
 
 // karatsuba implements Karatsuba's recursive algorithm, assuming a and b
-// have the same length.
-func karatsuba(a string, b string) (string, error) {
+// have the same length, the length being a power of 2.
+func karatsuba(a string, b string) string {
 	if len(a) == 1 {
 		// Convert to integers and multiply
-		aint, erra := strconv.Atoi(a)
-		if erra != nil {
-			return "", erra
-		}
-		bint, errb := strconv.Atoi(b)
-		if errb != nil {
-			return "", errb
-		}
-		return string(aint * bint), nil
+		aint, _ := strconv.Atoi(a)
+		bint, _ := strconv.Atoi(b)
+		return strconv.Itoa(aint * bint)
 	}
 
-	h := len(a) / 2
+	n := len(a)
+	h := n / 2
 	al := a[:h]
 	ar := a[h:]
 	bl := b[:h]
 	br := b[h:]
+	x := karatsuba(al, bl)
+	y := add(karatsuba(al, br), karatsuba(bl, ar))
+	z := karatsuba(ar, br)
 
-	x, errx := karatsuba(al, bl)
-	if errx != nil {
-		return "", errx
-	}
-	y, erry := karatsuba(ar, br)
-	if erry != nil {
-		return "", erry
-	}
-	z, errz := karatsuba(add(al, ar), add(bl, br))
-	if errz != nil {
-		return "", errz
-	}
-
-	// (10^n)(a)(c) + (10^(n/2))((a*d)+(b*c))+ (b)(d)
-	// TODO
-	return x + y + z, nil
+	return add(add(shift(x, n), shift(y, h)), z)
 }
 
 func add(a string, b string) string {
@@ -109,8 +89,6 @@ func sub(a string, b string) string {
 		diff = strconv.Itoa(d) + diff
 	}
 
-	fmt.Println(diff)
-
 	return unpad(diff)
 }
 
@@ -125,6 +103,19 @@ func evenPad(a *string, b *string) {
 	}
 }
 
+func padToPowerOfTwo(a string) string {
+	l := len(a)
+	p := 1
+	e := 0
+	for ; l > p; e++ {
+		p = int(math.Pow(2, float64(e)))
+	}
+	for ; l < p; l++ {
+		a = "0" + a
+	}
+	return a
+}
+
 func unpad(a string) string {
 	var r string
 	for i, l := range a {
@@ -137,4 +128,11 @@ func unpad(a string) string {
 		r = "0"
 	}
 	return r
+}
+
+func shift(a string, n int) string {
+	for i := 0; i < n; i++ {
+		a = a + "0"
+	}
+	return a
 }
