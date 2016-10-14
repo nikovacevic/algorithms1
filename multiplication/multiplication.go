@@ -8,9 +8,7 @@ import (
 // Karatsuba returns the product of a and b, which should be positive integers
 // represented as strings (e.g. 123 as "123").
 func Karatsuba(a string, b string) string {
-	// Make sure string lengths are equal
 	evenPad(&a, &b)
-	// Make sure string lengths are powers of 2
 	a = padToPowerOfTwo(a)
 	b = padToPowerOfTwo(b)
 	return unpad(karatsuba(a, b))
@@ -20,7 +18,6 @@ func Karatsuba(a string, b string) string {
 // have the same length, the length being a power of 2.
 func karatsuba(a string, b string) string {
 	if len(a) == 1 {
-		// Convert to integers and multiply
 		aint, _ := strconv.Atoi(a)
 		bint, _ := strconv.Atoi(b)
 		return strconv.Itoa(aint * bint)
@@ -39,6 +36,7 @@ func karatsuba(a string, b string) string {
 	return add(add(shift(x, n), shift(y, h)), z)
 }
 
+// add calculates the sum of two positive integers, represented as strings.
 func add(a string, b string) string {
 	evenPad(&a, &b)
 
@@ -64,6 +62,8 @@ func add(a string, b string) string {
 	return sum
 }
 
+// sub calculates the difference of two positive integers, represented as
+// strings.
 func sub(a string, b string) string {
 	evenPad(&a, &b)
 
@@ -92,6 +92,8 @@ func sub(a string, b string) string {
 	return unpad(diff)
 }
 
+// evenPad pads two positive integers, represented as strings, with leading
+// zeros until they are equal in string length.
 func evenPad(a *string, b *string) {
 	if len(*a) != len(*b) {
 		for len(*a) < len(*b) {
@@ -103,6 +105,8 @@ func evenPad(a *string, b *string) {
 	}
 }
 
+// padToPowerOfTwo pads a positive integer, represented as a string, with
+// leading zeros until the string length of a is a power of two.
 func padToPowerOfTwo(a string) string {
 	l := len(a)
 	p := 1
@@ -116,6 +120,7 @@ func padToPowerOfTwo(a string) string {
 	return a
 }
 
+// unpad removes leading zeros from a positive integer represented as a string.
 func unpad(a string) string {
 	var r string
 	for i, l := range a {
@@ -130,6 +135,8 @@ func unpad(a string) string {
 	return r
 }
 
+// shift adds n trailing zeros to a positive integer, a, represented as a
+// string.
 func shift(a string, n int) string {
 	for i := 0; i < n; i++ {
 		a = a + "0"
