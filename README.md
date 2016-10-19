@@ -16,27 +16,30 @@ Given that `merge` will be called at most `log n` times, and `n` (number of elem
 
 ### [Karatsuba multiplication](https://github.com/nikovacevic/algorithms1/blob/master/multiplication/multiplication.go)
 
-`Karatsuba` acts as a wrapper function, executing some low-factor (O(`n`) or O(`1`)) helper functions to pre-process the input to `karatsuba`, which does the real work.
+`Karatsuba` acts as a wrapper function, executing some low-factor (`O(n)` or `O(1)`) helper functions to pad the input to `karatsuba`, which does the recursive work.
 
 `karatsuba` can be modeled with the following recurrence relation:
 ```
 T(n) = 3*T(n/2) + 2A(n/2) + A(n) + S(n)
 ```
-where `A(n)` defines efficiency of `add` and `S(n)` for `sub`. We want to isolate the non-recursive bit, then analyze that:
+where `A(n)` represents `add` and `S(n)` represents `sub`. First, we will analyze the non-recursive bit:
 ```
 T(n) = 3*T(n/2) + f(n)
-where f(n) = 2A(n/2) + A(n) + S(n)
-and A(n) = Θ(n)
-and S(n) = Θ(n)
-therefore, f(n) = Θ(n)
+  where f(n) = 2A(n/2) + A(n) + S(n)
+  and   A(n) = Θ(n)
+  and   S(n) = Θ(n)
+therefore f(n) = Θ(n)
 ```
 Using the [Master theorem](https://en.wikipedia.org/wiki/Master_theorem), we state the following:
 ```
-T(n) = 3*T(n/2) + f(n), so a = 3, b = 2
+T(n) = 3*T(n/2) + f(n)
+  a = 3
+  b = 2
+```
+If there exists `c` such that `f(n) = O(n^c)`` where `c < log_b(a)`, then `T(n) = Θ(n^log_b(a))`
 
-By the Master method, if there exists c such that f(n)=O(n^c) where c<log_b(a), then T(n)=Θ(n^log_b(a))
-
-We know f(n) = Θ(n), so choose c=1
-Then, f(n)=O(n) where 1<log_2(3), and therefore
-T(n)=Θ(n^log_2(3))
+Given f(n) = Θ(n), choose c = 1
+Then, f(n) = O(n)
+  where 1 < log_2(3)
+therefore T(n) = Θ(n^log_2(3))
 ```
