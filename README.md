@@ -36,8 +36,8 @@ T(n) = 3*T(n/2) + f(n)
   a = 3
   b = 2
 ```
-If there exists `c` such that `f(n) = O(n^c)`` where `c < log_b(a)`, then `T(n) = Θ(n^log_b(a))`
-
+If there exists `c` such that `f(n) = O(n^c)` where `c < log_b(a)`, then `T(n) = Θ(n^log_b(a))`
+```
 Given f(n) = Θ(n), choose c = 1
 Then, f(n) = O(n)
   where 1 < log_2(3)
