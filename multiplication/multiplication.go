@@ -29,9 +29,9 @@ func karatsuba(a string, b string) string {
 	ar := a[h:]
 	bl := b[:h]
 	br := b[h:]
-	x := karatsuba(al, bl)
-	y := add(karatsuba(al, br), karatsuba(bl, ar))
-	z := karatsuba(ar, br)
+	x := Karatsuba(al, bl)
+	z := Karatsuba(ar, br)
+	y := sub(Karatsuba(add(al, ar), add(bl, br)), add(x, z))
 
 	return add(add(shift(x, n), shift(y, h)), z)
 }
