@@ -2,10 +2,6 @@
 
 [Coursera Algorithms I](https://www.coursera.org/learn/algorithms-divide-conquer/home/welcome), implemented in Go.
 
-## Week 1: Divide and Conquer
-
-Covers merge sort, Karatsuba's integer multiplication, basic O-notation analysis.
-
 ### [Mergesort](https://github.com/nikovacevic/algorithms1/blob/master/mergesort/mergesort.go)
 
 `Sort` returns the array (`O(1)`) in the base case. It recursively calls itself twice for each non-base-case call. This can happen at most `log n` times before each recursive call reached the base case.
@@ -43,3 +39,7 @@ Then, f(n) = O(n)
   where 1 < log_2(3)
 therefore T(n) = Θ(n^log_2(3))
 ```
+
+### [Inversions](https://github.com/nikovacevic/algorithms1/blob/master/inversions/inversions.go)
+
+`Count` returns the number of inversions in a given array. That is accomplished by piggy-backing on `mergesort`, counting the number of inversions on the merge step, which adds a lower-order factor, thus retaining `mergesort`'s `O(n log n)` time complexity. (See above for that analysis.)
