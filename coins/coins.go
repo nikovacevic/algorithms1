@@ -57,7 +57,7 @@ func Minimum(amount int, coins Coins) (Coins, int) {
 		var coin int
 		min := maxInt
 		for i, c := range coins {
-			if c.value <= n && n-c.value >= 0 && (1+m[n-c.value]) < min {
+			if c.value <= n && (1+m[n-c.value]) < min {
 				if m[n-c.value] != maxInt {
 					min = 1 + m[n-c.value]
 				}
