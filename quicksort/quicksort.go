@@ -1,20 +1,35 @@
 package quicksort
 
+import (
+	"bufio"
+	"math/big"
+	"os"
+	"strconv"
+)
+
 // pivotFunc is a function that selects a pivot element index
 type pivotFunc func([]int) int
 
 // Sort sorts a slice of integers in ascending order
-func Sort(a []int, pf pivotFunc) []int {
+func Sort(a []int, pf pivotFunc, count big.Int) ([]int, big.Int) {
 	// Base case: an array of length 1 is always sorted
 	if len(a) <= 1 {
-		return a
+		return a, *big.NewInt(0)
 	}
 	p, pivot := selectPivot(pf, a)
 	a, i := Partition(a, p)
-	al := Sort(a[:i-1], pf)
-	ar := Sort(a[i:], pf)
+	al, c := Sort(a[:i-1], pf, count)
+	count.Add(&count, &c)
+	if len(al) > 0 {
+		count.Add(&count, big.NewInt(int64(len(al)-1)))
+	}
+	ar, c := Sort(a[i:], pf, count)
+	count.Add(&count, &c)
+	if len(ar) > 0 {
+		count.Add(&count, big.NewInt(int64(len(ar)-1)))
+	}
 	a = append(append(al, pivot), ar...)
-	return a
+	return a, count
 }
 
 // Partition rearranges the elements of a such that elements 0 through i are
@@ -72,4 +87,23 @@ func byMedianOfThree(a []int) int {
 		}
 	}
 	return i[1]
+}
+
+// SortFromFile ...
+func SortFromFile(path string, pf pivotFunc) ([]int, big.Int) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, *big.NewInt(0)
+	}
+	scanner := bufio.NewScanner(f)
+	scanner.Split(bufio.ScanLines)
+	var arr []int
+	for scanner.Scan() {
+		i, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			return nil, *big.NewInt(0)
+		}
+		arr = append(arr, i)
+	}
+	return Sort(arr, pf, big.Int{})
 }
