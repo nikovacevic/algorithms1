@@ -2,7 +2,6 @@ package quicksort
 
 import (
 	"fmt"
-	"math/big"
 	"testing"
 )
 
@@ -20,7 +19,7 @@ var SortTests = []struct {
 
 func TestSortByFirstElement(t *testing.T) {
 	for _, tt := range SortTests {
-		actual, _ := Sort(tt.arr, byFirstElement, big.Int{})
+		actual := Sort(tt.arr, byFirstElement)
 		if !isEqual(actual, tt.expected) {
 			t.Errorf("Sort(\"%v\") expected %v, actual %v", tt.arr, tt.expected, actual)
 		}
@@ -29,7 +28,7 @@ func TestSortByFirstElement(t *testing.T) {
 
 func TestSortByLastElement(t *testing.T) {
 	for _, tt := range SortTests {
-		actual, _ := Sort(tt.arr, byLastElement, big.Int{})
+		actual := Sort(tt.arr, byLastElement)
 		if !isEqual(actual, tt.expected) {
 			t.Errorf("Sort(\"%v\") expected %v, actual %v", tt.arr, tt.expected, actual)
 		}
@@ -38,43 +37,75 @@ func TestSortByLastElement(t *testing.T) {
 
 func TestSortByMedianOfThree(t *testing.T) {
 	for _, tt := range SortTests {
-		actual, _ := Sort(tt.arr, byMedianOfThree, big.Int{})
+		actual := Sort(tt.arr, byMedianOfThree)
 		if !isEqual(actual, tt.expected) {
 			t.Errorf("Sort(\"%v\") expected %v, actual %v", tt.arr, tt.expected, actual)
 		}
 	}
 }
 
+/*
 func TestSortFromFile(t *testing.T) {
-	count := big.Int{}
+	var act []int
 	fmt.Println("10.txt:")
-	_, count = SortFromFile("test/10.txt", byFirstElement)
-	fmt.Printf("byFirstElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/10.txt", byLastElement)
-	fmt.Printf("byLastElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/10.txt", byMedianOfThree)
-	fmt.Printf("byMedianOfThree: %v\n", count.Text(10))
-	fmt.Println("100.txt:")
-	_, count = SortFromFile("test/100.txt", byFirstElement)
-	fmt.Printf("byFirstElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/100.txt", byLastElement)
-	fmt.Printf("byLastElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/100.txt", byMedianOfThree)
-	fmt.Printf("byMedianOfThree: %v\n", count.Text(10))
+	act = SortFromFile("test/10.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", act)
+	act = SortFromFile("test/10.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", act)
+	act = SortFromFile("test/10.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", act)
 	fmt.Println("1000.txt:")
-	_, count = SortFromFile("test/1000.txt", byFirstElement)
-	fmt.Printf("byFirstElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/1000.txt", byLastElement)
-	fmt.Printf("byLastElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/1000.txt", byMedianOfThree)
-	fmt.Printf("byMedianOfThree: %v\n", count.Text(10))
+	act = SortFromFile("test/1000.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", act)
+	act = SortFromFile("test/1000.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", act)
+	act = SortFromFile("test/1000.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", act)
+}
+*/
+
+func TestCountSortFromFile(t *testing.T) {
+	var count int
+
+	fmt.Println("10.txt:")
+	_, count = CountSortFromFile("test/10.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", count)
+	_, count = CountSortFromFile("test/10.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", count)
+	_, count = CountSortFromFile("test/10.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", count)
+
+	fmt.Println("10_sorted.txt:")
+	_, count = CountSortFromFile("test/10_sorted.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", count)
+	_, count = CountSortFromFile("test/10_sorted.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", count)
+	_, count = CountSortFromFile("test/10_sorted.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", count)
+
+	fmt.Println("100.txt:")
+	_, count = CountSortFromFile("test/100.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", count)
+	_, count = CountSortFromFile("test/100.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", count)
+	_, count = CountSortFromFile("test/100.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", count)
+
+	fmt.Println("1000.txt:")
+	_, count = CountSortFromFile("test/1000.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", count)
+	_, count = CountSortFromFile("test/1000.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", count)
+	_, count = CountSortFromFile("test/1000.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", count)
+
 	fmt.Println("QuickSort.txt:")
-	_, count = SortFromFile("test/QuickSort.txt", byFirstElement)
-	fmt.Printf("byFirstElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/QuickSort.txt", byLastElement)
-	fmt.Printf("byLastElement: %v\n", count.Text(10))
-	_, count = SortFromFile("test/QuickSort.txt", byMedianOfThree)
-	fmt.Printf("byMedianOfThree: %v\n", count.Text(10))
+	_, count = CountSortFromFile("test/QuickSort.txt", byFirstElement)
+	fmt.Printf("byFirstElement: %v\n", count)
+	_, count = CountSortFromFile("test/QuickSort.txt", byLastElement)
+	fmt.Printf("byLastElement: %v\n", count)
+	_, count = CountSortFromFile("test/QuickSort.txt", byMedianOfThree)
+	fmt.Printf("byMedianOfThree: %v\n", count)
 }
 
 func isEqual(a, b []int) bool {

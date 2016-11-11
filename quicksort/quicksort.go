@@ -2,7 +2,6 @@ package quicksort
 
 import (
 	"bufio"
-	"math/big"
 	"os"
 	"strconv"
 )
@@ -11,24 +10,35 @@ import (
 type pivotFunc func([]int) int
 
 // Sort sorts a slice of integers in ascending order
-func Sort(a []int, pf pivotFunc, count big.Int) ([]int, big.Int) {
-	// Base case: an array of length 1 is always sorted
+func Sort(a []int, pf pivotFunc) []int {
 	if len(a) <= 1 {
-		return a, *big.NewInt(0)
+		return a
 	}
 	p, pivot := selectPivot(pf, a)
 	a, i := Partition(a, p)
-	al, c := Sort(a[:i-1], pf, count)
-	count.Add(&count, &c)
-	if len(al) > 0 {
-		count.Add(&count, big.NewInt(int64(len(al)-1)))
-	}
-	ar, c := Sort(a[i:], pf, count)
-	count.Add(&count, &c)
-	if len(ar) > 0 {
-		count.Add(&count, big.NewInt(int64(len(ar)-1)))
-	}
+	al := Sort(a[:i-1], pf)
+	ar := Sort(a[i:], pf)
 	a = append(append(al, pivot), ar...)
+	return a
+}
+
+// CountSort sorts a slice of integers in ascending order using quicksort,
+// counting comparisons, which are sent on a channel at each recursive call
+func CountSort(a []int, pf pivotFunc) ([]int, int) {
+	if len(a) <= 1 {
+		return a, 0
+	}
+	var count int
+	p, pivot := selectPivot(pf, a)
+	a, i := Partition(a, p)
+	al, cl := CountSort(a[:i-1], pf)
+	count += cl
+	ar, cr := CountSort(a[i:], pf)
+	count += cr
+	a = append(append(al, pivot), ar...)
+
+	count += len(a) - 1
+
 	return a, count
 }
 
@@ -64,9 +74,6 @@ func byFirstElement(a []int) int {
 
 // byLastElement is a pivotFunc that always selects the last element
 func byLastElement(a []int) int {
-	if len(a) == 0 {
-		return 0
-	}
 	return len(a) - 1
 }
 
@@ -76,8 +83,13 @@ func byMedianOfThree(a []int) int {
 	if len(a) <= 2 {
 		return 0
 	}
-	i := []int{0, len(a) / 2, len(a) - 1}
-	s := []int{a[0], a[len(a)/2], a[len(a)-1]}
+	var m int
+	m = len(a) / 2
+	if len(a)%2 == 0 {
+		m--
+	}
+	i := []int{0, m, len(a) - 1}
+	s := []int{a[0], a[m], a[len(a)-1]}
 	for x := range s {
 		y := x
 		for y > 0 && s[y-1] > s[y] {
@@ -90,10 +102,10 @@ func byMedianOfThree(a []int) int {
 }
 
 // SortFromFile ...
-func SortFromFile(path string, pf pivotFunc) ([]int, big.Int) {
+func SortFromFile(path string, pf pivotFunc) []int {
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, *big.NewInt(0)
+		return nil
 	}
 	scanner := bufio.NewScanner(f)
 	scanner.Split(bufio.ScanLines)
@@ -101,9 +113,29 @@ func SortFromFile(path string, pf pivotFunc) ([]int, big.Int) {
 	for scanner.Scan() {
 		i, err := strconv.Atoi(scanner.Text())
 		if err != nil {
-			return nil, *big.NewInt(0)
+			return nil
 		}
 		arr = append(arr, i)
 	}
-	return Sort(arr, pf, big.Int{})
+	return Sort(arr, pf)
+}
+
+// CountSortFromFile ...
+func CountSortFromFile(path string, pf pivotFunc) ([]int, int) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, 0
+	}
+	scanner := bufio.NewScanner(f)
+	scanner.Split(bufio.ScanLines)
+	var arr []int
+	for scanner.Scan() {
+		i, err := strconv.Atoi(scanner.Text())
+		if err != nil {
+			return nil, 0
+		}
+		arr = append(arr, i)
+	}
+
+	return CountSort(arr, pf)
 }
